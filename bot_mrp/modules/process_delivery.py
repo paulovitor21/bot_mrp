@@ -8,19 +8,29 @@ class Bot(DesktopBot):
     def action(self, execution=None):
         pass
 
-    def process_delivery(self, file_delivery):
+    def open_excel(self, excel_file_path):
+        os.startfile(excel_file_path)
+        time.sleep(10)  # Aguardar o Excel carregar completamente
+
+        try:
+            wb = xw.Book(excel_file_path)  # Abrir ou pegar o arquivo ativo
+            return wb
+        except Exception as e:
+            print(f"Erro ao abrir o arquivo no Excel: {e}")
+            return None
+
+    def process_delivery(self, file_delivery, master_all_path):
         print(f"Processing delivery file: {file_delivery}")
+
         # Carregar os dados do delivery
         delivery_df = pd.read_excel(file_delivery)
 
         # Abrir o Excel e carregar o workbook existente
-        excel_file_path = r'C:\Users\Paulo\Desktop\bot_mrp\bot_mrp\05.03_Master_All_Sourcing_.xlsb'
-        os.startfile(excel_file_path)
-        time.sleep(10)  # Aguarde o Excel abrir
+        wb = self.open_excel(master_all_path)
+        if not wb:
+            return
 
-        # Usar xlwings para navegar para a aba 'delivery'
-        wb = xw.Book(excel_file_path)  # Abre o arquivo ou pega o ativo
-        ws = wb.sheets["Delivery"]  # Nome da aba desejada
+        ws = wb.sheets["Delivery"]  # Selecionar a aba desejada
         ws.activate()
         print(f"Aba ativa: {ws.name}")
 
@@ -30,11 +40,13 @@ class Bot(DesktopBot):
         # Inserir os novos dados
         ws.range("C2").value = delivery_df.values.tolist()
 
-        # Salvar o workbook
-        wb.save()
-        wb.close()
-
-        print("Delivery data has been updated in master_all.xlsx")
+        # Salvar e fechar o arquivo
+        try:
+            wb.save()
+            wb.close()
+            print("Delivery data has been updated in master_all.xlsx")
+        except Exception as e:
+            print(f"Erro ao salvar/fechar o arquivo: {e}")
 
 if __name__ == '__main__':
     bot = Bot()

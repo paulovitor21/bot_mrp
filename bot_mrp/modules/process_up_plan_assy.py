@@ -19,14 +19,14 @@ class Bot(DesktopBot):
             print(f"Erro ao abrir o arquivo no Excel: {e}")
             return None
 
-    def process_bom(self, file_bom, master_all_path):
-        print(f"Processing bom file: {file_bom}")
+    def process_plan_assy(self, master_all_path):
+        print(f"Processing plan assy: {master_all_path}")
 
         wb = self.open_excel(master_all_path)
         if not wb:
             return
 
-        ws = wb.sheets["BOM"]  # Selecionar a aba desejada
+        ws = wb.sheets["PlanAssy"]  # Selecionar a aba desejada
         ws.activate()
         print(f"Aba ativa: {ws.name}")
 
@@ -34,8 +34,8 @@ class Bot(DesktopBot):
         try:
             excel = win32com.client.Dispatch("Excel.Application")
             excel.Visible = True  # Exibe a interface do Excel
-            excel.Application.Run(f"'{wb.name}'!Module1.BOM_Assy_Master_Click", file_bom)
-            print("Macro BOM_Assy_Master_Click executada com sucesso.")
+            excel.Application.Run(f"'{wb.name}'!Module1.Up_PlanAssy_Click")
+            print("Macro Up_PlanAssy_Click executada com sucesso.")
         except Exception as e:
             print(f"Erro ao executar a macro: {e}")
 
@@ -43,7 +43,7 @@ class Bot(DesktopBot):
         try:
             wb.save()
             wb.close()
-            print("BOM data has been updated successfully.")
+            print("PlanAssy data has been updated successfully.")
         except Exception as e:
             print(f"Erro ao salvar/fechar o arquivo: {e}")
 

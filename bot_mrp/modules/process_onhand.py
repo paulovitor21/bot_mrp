@@ -9,7 +9,18 @@ class Bot(DesktopBot):
     def action(self, execution=None):
         pass
 
-    def process_onhand(self, file_onhand):
+    def open_excel(self, excel_file_path):
+        os.startfile(excel_file_path)
+        time.sleep(15)  # Aguardar o Excel carregar completamente
+
+        try:
+            wb = xw.Book(excel_file_path)  # Abrir ou pegar o arquivo ativo
+            return wb
+        except Exception as e:
+            print(f"Erro ao abrir o arquivo no Excel: {e}")
+            return None
+
+    def process_onhand(self, file_onhand, master_all_path):
         print(f"Processing onhand file: {file_onhand}")
 
         # Carregar os dados do onhand
@@ -25,15 +36,8 @@ class Bot(DesktopBot):
         data_to_insert = selected_columns.values.tolist()
 
         # Abrir o Excel e carregar o workbook existente
-        excel_file_path = r'C:\Users\Paulo\Desktop\bot_mrp\bot_mrp\05.03_Master_All_Sourcing_.xlsb'
-        os.startfile(excel_file_path)
-        time.sleep(15)  # Aguardar o Excel carregar completamente
-
-        # Tentar conectar ao arquivo aberto no Excel
-        try:
-            wb = xw.Book(excel_file_path)  # Abrir ou pegar o arquivo ativo
-        except Exception as e:
-            print(f"Erro ao abrir o arquivo no Excel: {e}")
+        wb = self.open_excel(master_all_path)
+        if not wb:
             return
 
         ws = wb.sheets["Onhand"]  # Selecionar a aba desejada
@@ -53,11 +57,8 @@ class Bot(DesktopBot):
         try:
             excel = win32com.client.Dispatch("Excel.Application")
             excel.Visible = True  # Exibe a interface do Excel
-            workbook = excel.Workbooks.Open(excel_file_path)
-            formulario_nome = "Module1"
-            excel.Application.Run(f"{formulario_nome}.Onhand_Chave_Click")
+            excel.Application.Run(f"'{wb.name}'!Module1.Onhand_Chave_Click")
             print("Macro Onhand_Chave_Click executada com sucesso.")
-            self.enter()
         except Exception as e:
             print(f"Erro ao executar a macro: {e}")
 
