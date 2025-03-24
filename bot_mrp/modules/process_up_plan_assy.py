@@ -34,6 +34,7 @@ class Bot(DesktopBot):
         try:
             excel = win32com.client.Dispatch("Excel.Application")
             excel.Visible = True  # Exibe a interface do Excel
+            excel.DisplayAlerts = False  # Desabilita as mensagens de alerta do Excel
             excel.Application.Run(f"'{wb.name}'!Module1.Up_PlanAssy_Click")
             print("Macro Up_PlanAssy_Click executada com sucesso.")
         except Exception as e:

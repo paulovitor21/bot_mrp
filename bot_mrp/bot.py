@@ -33,20 +33,20 @@ def main():
     file_delivery =(r"C:\Users\Paulo\Desktop\tarefa\planilhas_base\Delivery Status 03062025 0935.xlsx")
     bot = Bot()
     bot.process_delivery(file_delivery, master_all_path)
-    
+
     # 3 - etapa onhand
     file_onhand = (r"C:\Users\Paulo\Desktop\tarefa\planilhas_base\Integration Onhand Inquiry20250306.xlsx")
     onhand_bot = OnhandBot()
     onhand_bot.process_onhand(file_onhand, master_all_path)
-
+    
     # 4 - Up_PlanAssy_Click
     plan_assy_bot = UpPlanAssyBot()
     plan_assy_bot.process_plan_assy(master_all_path)
 
     # 5 - supplier componel
-    file_componel = (r"C:\Users\Paulo\Desktop\tarefa\planilhas_base\07.03.25-LG-COMPONEL_-ESTOQUE_\07.03.25 LG COMPONEL_ ESTOQUE_.xlsx")
-    supplier_bot = SupplierBot()
-    supplier_bot.process_supplier(file_componel, master_all_path)
+    # file_componel = (r"C:\Users\Paulo\Desktop\tarefa\planilhas_base\07.03.25-LG-COMPONEL_-ESTOQUE_\07.03.25 LG COMPONEL_ ESTOQUE_.xlsx")
+    # supplier_bot = SupplierBot()
+    # supplier_bot.process_supplier(file_componel, master_all_path)
 
 
 
